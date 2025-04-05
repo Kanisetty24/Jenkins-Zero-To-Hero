@@ -1,14 +1,26 @@
 # You can change this base image to anything else
 # But make sure to use the correct version of Java
-# Build stage with Maven and JDK 17
-FROM maven:3.9.4-eclipse-temurin-17 AS build
+# Use an official Maven image with JDK 17
+FROM maven:3.9.6-eclipse-temurin-17
+
+# Set working directory
 WORKDIR /app
+
+# Copy source code
 COPY . .
+
+# Package the app using Maven
 RUN mvn clean package -DskipTests
 
-# Runtime stage with JDK 17
+# Use a lightweight JDK 17 base image to run the app
 FROM eclipse-temurin:17-jdk-alpine
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+
+WORKDIR /opt/app
+
+# Copy the jar from the previous build stage
+COPY --from=0 /app/target/spring-boot-web.jar app.jar
+
+# Run the app
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
 
