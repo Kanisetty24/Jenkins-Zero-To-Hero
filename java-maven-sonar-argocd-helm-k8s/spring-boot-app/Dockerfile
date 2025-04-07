@@ -1,6 +1,6 @@
 
 # But make sure to use the correct version of Java
-FROM FROM openjdk:17-jdk-alpine
+FROM openjdk:17-jdk-alpine
 
 # Simply the artifact path
 ARG artifact=target/spring-boot-web.jar
